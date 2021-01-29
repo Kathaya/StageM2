@@ -160,7 +160,7 @@ if __name__ == "__main__":
     ss_time = time.time()
     os.system("bash -c 'parallel -a {} -j {}' >> {}".format(path+"/launch_kc.txt", threads, path+"/kc_distance.csv"))
     os.system("bash -c 'parallel -a {} -j {}' >> {}".format(path+"/launch_ntree.txt", threads, path+"/ntree.csv"))
-    os.system("python script/imbalance2.py {} {} {} {}".format(nsim, threads, path, int(L)))
+    os.system("python script/imbalance2.py {} -i {} -t {} -l {}".format(path, nsim, threads, int(L)))
     ss_time = computation_time(ss_time)
 
     #Time calculation
