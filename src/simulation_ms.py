@@ -2,6 +2,7 @@ import argparse
 import os
 import time
 import shutil
+import sys
 """
 pop=$1 #Population size
 nb_sim=$2 #Number of simulation
@@ -50,6 +51,7 @@ def computation_time(start_time):
     return time.time() - start_time
 
 if __name__ == "__main__":
+    
     args = get_arguments()
     path=args.d+"/"+args.sd
 
@@ -60,6 +62,10 @@ if __name__ == "__main__":
     rho = args.r
     mu = args.m
     L = args.l
+    
+    #Saving current wd
+    wdpath = sys.argv[0].replace("simulation_ms.py", "")
+
 
     start_time=time.time()
     os.environ['threads'] = str(threads)
@@ -70,6 +76,7 @@ if __name__ == "__main__":
     os.mkdir(path)
 
     os.system("rm -rf launch*")
+
 
     #Preparing output file
     with open(path+"/kc_distance.csv", "w") as fillout:
@@ -84,7 +91,7 @@ if __name__ == "__main__":
             tree_path = path+"/msprime"+str(i)
 
             fillout.write("echo msprime {}\n".format(i))
-            fillout.write('python script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {} -l {}\n'.format(popSize, sampleSize, vcf_path, tree_path, rho, mu, L))
+            fillout.write('python {}script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {} -l {}\n'.format(wdpath, popSize, sampleSize, vcf_path, tree_path, rho, mu, L))
 
     ms_time = time.time()
     os.system("bash -c 'parallel -a launch_ms.txt -j $threads'")
@@ -97,7 +104,7 @@ if __name__ == "__main__":
             tree_path = path+"/msprime"+str(i)+"_2"
             #fillout.write(python script/msprime_simu.py -p popSize -s sampleSize -vp vcf_path -tp tree_path -rho rho -mu mu)
             fillout.write("echo msprime2 {}\n".format(i))
-            fillout.write('python script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {}\n'.format(popSize, sampleSize, vcf_path, tree_path, rho, mu))
+            fillout.write('python {}script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {}\n'.format(wdpath, popSize, sampleSize, vcf_path, tree_path, rho, mu))
     os.system("bash -c 'parallel -a launch_ms_2.txt -j $threads'")
 
 
@@ -108,7 +115,7 @@ if __name__ == "__main__":
             sample_path = path+"/sample"+str(i)+".samples"
             ts_path = path+"/ts"+str(i)+".trees"
 
-            fillout.write("python script/function_map2.py ts_sim --file1 {} --file2 {} --file3 {}\n".format(vcf_path, sample_path, ts_path))
+            fillout.write("python {}script/function_map2.py ts_sim --file1 {} --file2 {} --file3 {}\n".format(wdpath, vcf_path, sample_path, ts_path))
     
     ts_time = time.time()
     os.system("bash -c 'parallel -a launch_ts.txt -j $threads'")
@@ -125,7 +132,7 @@ if __name__ == "__main__":
             relate_curr = "relate"+str(i)
 
             pre.write("~/relate/bin/RelateFileFormats --mode ConvertFromVcf --haps {} --sample {} -i {}\n".format(haps_path, sample_path, simu))
-            map_re.write("python script/function_map2.py map --file1 {} --file2 {}\n".format(haps_path, map_path))
+            map_re.write("python {}script/function_map2.py map --file1 {} --file2 {}\n".format(wdpath, haps_path, map_path))
             re.write("~/relate/scripts/RelateParallel/RelateParallel.sh --mode All -m {} -N {} --haps {} --sample {} --map {} -o {} --threads {}\n".format(mu, popSize, haps_path, sample_path, map_path, relate_curr, threads))
             conv.write("~/relate/bin/RelateFileFormats --mode ConvertToTreeSequence -i {} -o {}\n".format(relate_curr, relate_path))
 
@@ -144,23 +151,23 @@ if __name__ == "__main__":
             retree = path+"/relate"+str(i)+".trees"
             m2tree = path+"/msprime"+str(i)+"_2.trees"
 
-            kc.write("echo {}'\t'$(python script/function_map2.py kc --file1 {} --file2 {})'\t'".format(i, mstree, tstree))
-            kc.write("$(python script/function_map2.py kc --file1 {} --file2 {})'\t'".format(mstree,retree))
-            kc.write("$(python script/function_map2.py kc --file1 {} --file2 {})'\t'".format(tstree,retree))
-            kc.write("$(python script/function_map2.py kc --file1 {} --file2 {})'\t'".format(mstree,m2tree))
-            kc.write("$(python script/function_map2.py kc --file1 {} --file2 {})'\t'".format(retree,m2tree))
-            kc.write("$(python script/function_map2.py kc --file1 {} --file2 {})\n".format(tstree,m2tree))
+            kc.write("echo {}'\t'$(python {}script/function_map2.py kc --file1 {} --file2 {})'\t'".format(i, wdpath, mstree, tstree))
+            kc.write("$(python {}script/function_map2.py kc --file1 {} --file2 {})'\t'".format(wdpath, mstree,retree))
+            kc.write("$(python {}script/function_map2.py kc --file1 {} --file2 {})'\t'".format(wdpath, tstree,retree))
+            kc.write("$(python {}script/function_map2.py kc --file1 {} --file2 {})'\t'".format(wdpath, mstree,m2tree))
+            kc.write("$(python {}script/function_map2.py kc --file1 {} --file2 {})'\t'".format(wdpath, retree,m2tree))
+            kc.write("$(python {}script/function_map2.py kc --file1 {} --file2 {})\n".format(wdpath, tstree,m2tree))
             #kc.write("\n")
 
-            ntree.write("echo $(python script/function_map2.py ntree --file1 {})'\t'".format(mstree))
-            ntree.write(str("$(python script/function_map2.py ntree --file1 {})'\t'".format(tstree)))
-            ntree.write(str("$(python script/function_map2.py ntree --file1 {})'\t'".format(retree)))
-            ntree.write(str("$(python script/function_map2.py ntree --file1 {})\n".format(m2tree)))
+            ntree.write("echo $(python {}script/function_map2.py ntree --file1 {})'\t'".format(wdpath, mstree))
+            ntree.write(str("$(python {}script/function_map2.py ntree --file1 {})'\t'".format(wdpath, tstree)))
+            ntree.write(str("$(python {}script/function_map2.py ntree --file1 {})'\t'".format(wdpath, retree)))
+            ntree.write(str("$(python {}script/function_map2.py ntree --file1 {})\n".format(wdpath, m2tree)))
 
     ss_time = time.time()
     os.system("bash -c 'parallel -a {} -j {}' >> {}".format(path+"/launch_kc.txt", threads, path+"/kc_distance.csv"))
     os.system("bash -c 'parallel -a {} -j {}' >> {}".format(path+"/launch_ntree.txt", threads, path+"/ntree.csv"))
-    os.system("python script/imbalance2.py {} -i {} -t {} -l {}".format(path, nsim, threads, int(L)))
+    os.system("python {}script/imbalance2.py {} -i {} -t {} -l {}".format(wdpath, path, nsim, threads, int(L)))
     ss_time = computation_time(ss_time)
 
     #Time calculation
