@@ -34,6 +34,16 @@ if __name__ == "__main__":
     k_len = args.l
     par = args.t
     dirName = args.p
+
+    #Saving current wd
+    wdpath = sys.argv[0].replace("imbalance2.py", "")
+    print(wdpath)
+    print(wdpath)
+    print(wdpath)
+    print(wdpath)
+    print(wdpath)
+    os.environ['curr'] = wdpath
+
     # conversion en Newick pour index Imbalance
 
     os.environ['path'] = dirName
@@ -42,7 +52,7 @@ if __name__ == "__main__":
     os.system("bash -c 'rm launch_conv.txt'")
     for i in range(1,nb_sim+1):
         os.environ['i']=str(i)
-        os.system("echo python script/newick_conv.py $i $path msprime >> launch_conv.txt")
+        os.system("echo python ${curr}newick_conv.py $i $path msprime >> launch_conv.txt")
 
     os.system("bash -c 'parallel -a launch_conv.txt -j $par'")
     os.system("bash -c 'parallel -a    launchms.txt -j $par'")
@@ -64,10 +74,10 @@ if __name__ == "__main__":
         os.environ['tsNewick'] = tsNewick
         os.environ['reNewick'] = reNewick
         os.environ['msNewick2'] = msNewick2
-        os.system("echo python script/format_netwick.py $msNewick $msNewick'.out' >> launchms.txt")
-        os.system("echo python script/format_netwick.py $tsNewick $tsNewick'.out' >> launchts.txt")
-        os.system("echo python script/format_netwick.py $reNewick $reNewick'.out' >> launchre.txt")
-        os.system("echo python script/format_netwick.py $msNewick2 $msNewick2'.out' >> launchms2.txt")
+        os.system("echo python ${curr}format_netwick.py $msNewick $msNewick'.out' >> launchms.txt")
+        os.system("echo python ${curr}format_netwick.py $tsNewick $tsNewick'.out' >> launchts.txt")
+        os.system("echo python ${curr}format_netwick.py $reNewick $reNewick'.out' >> launchre.txt")
+        os.system("echo python ${curr}format_netwick.py $msNewick2 $msNewick2'.out' >> launchms2.txt")
         #os.system("bash -c './script/format_netwick.py '$msNewick' '$msNewick'.out' >> lauchms.txt")
         #os.system("bash -c './script/format_netwick.py '$tsNewick' '$tsNewick'.out' >> lauchts.txt")
         #os.system("bash -c './script/format_netwick.py '$reNewick' '$reNewick'.out' >> lauchre.txt")
@@ -94,10 +104,10 @@ if __name__ == "__main__":
         os.environ['tsNewick'] = tsNewick
         os.environ['reNewick'] = reNewick
         os.environ['msNewick2'] = msNewick2
-        os.system("echo './script/CalcIPrimeV2_linux64.exe -f '$msNewick'.out > '$msNewick'.results' >> launch2ms.txt")
-        os.system("echo './script/CalcIPrimeV2_linux64.exe -f '$tsNewick'.out > '$tsNewick'.results' >> launch2ts.txt")
-        os.system("echo './script/CalcIPrimeV2_linux64.exe -f '$reNewick'.out > '$reNewick'.results' >> launch2re.txt")
-        os.system("echo './script/CalcIPrimeV2_linux64.exe -f '$msNewick2'.out > '$msNewick2'.results' >> launch2ms2.txt")
+        os.system("echo './${curr}CalcIPrimeV2_linux64.exe -f '$msNewick'.out > '$msNewick'.results' >> launch2ms.txt")
+        os.system("echo './${curr}CalcIPrimeV2_linux64.exe -f '$tsNewick'.out > '$tsNewick'.results' >> launch2ts.txt")
+        os.system("echo './${curr}CalcIPrimeV2_linux64.exe -f '$reNewick'.out > '$reNewick'.results' >> launch2re.txt")
+        os.system("echo './${curr}CalcIPrimeV2_linux64.exe -f '$msNewick2'.out > '$msNewick2'.results' >> launch2ms2.txt")
         #os.system("bash -c './script/CalclPrimeV2_linux64.exe -f '$msNewick'.out' > $msNewick'.results' >>launch2ms.txt")
         #os.system("bash -c './script/CalclPrimeV2_linux64.exe -f '$tsNewick'.out' > $tsNewick'.results' >>launch2ts.txt")
         #os.system("bash -c './script/CalclPrimeV2_linux64.exe -f '$reNewick'.out' > $reNewick'.results' >>launch2re.txt")
