@@ -35,5 +35,6 @@ To silence parallel, you can write once :
 ```shell
 parallel --citation
 ```
-## Slim installation :
+## SLiM installation :
+Go on [SLiM website](https://messerlab.org/slim/) installation guide.
 Now everything should be setup
