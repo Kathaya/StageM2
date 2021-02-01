@@ -37,4 +37,15 @@ parallel --citation
 ```
 ## SLiM installation :
 Go on [SLiM website](https://messerlab.org/slim/) installation guide.
-Now everything should be setup
+
+Now everything should be setup.
+
+# Usage
+
+Two python script are aviable for now. The first one name **simulation_ms.py** is used to simulate datas via **msprime** and infer trees via **Relate** and **tsinfer**. 
+
+Try :
+``` shell
+python path/to/directory/src/simulation_ms.py -h
+```
+to see usage
