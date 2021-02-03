@@ -104,7 +104,7 @@ if __name__ == "__main__":
             tree_path = path+"/msprime"+str(i)+"_2"
             #fillout.write(python script/msprime_simu.py -p popSize -s sampleSize -vp vcf_path -tp tree_path -rho rho -mu mu)
             fillout.write("echo msprime2 {}\n".format(i))
-            fillout.write('python {}script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {}\n'.format(wdpath, popSize, sampleSize, vcf_path, tree_path, rho, mu))
+            fillout.write('python {}script/msprime_simu.py -p {} -s {} -vp {} -tp {} -rho {} -mu {} -l {}\n'.format(wdpath, popSize, sampleSize, vcf_path, tree_path, rho, mu, L))
     os.system("bash -c 'parallel -a launch_ms_2.txt -j $threads'")
 
 

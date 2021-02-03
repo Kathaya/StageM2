@@ -25,19 +25,19 @@ def get_arguments():
     
 def verification(tree_sequence):
     """
-    Verification of doublons or mutation at the first and last position of the genome. 
+    Verification of mutation at the first and last position of the genome. 
     In that case, we will regenerate the information.
     """
     flag=0
     valeur = []
     for var in tree_sequence.variants():
         index = int(round(var.site.position))
-        if (index not in valeur) and (index != 0) and (index != L):
-            valeur.append(index)
-        else:
+        if index == 0 or index == L:
             flag=1
             break
-    if flag == 0:
+        else:
+            valeur.append(index)
+    if flag == 0 and len(valeur)>=10:
         return 0
     else:
         return 1
@@ -82,7 +82,9 @@ if __name__ == "__main__":
 
     tree_sequence.dump(tree_path+".trees")
     with open(vcf_path+".vcf", "w") as vcf_file: 
-            tree_sequence.write_vcf(vcf_file, ploidy=2)
+            tree_sequence.write_vcf(vcf_file, ploidy=2, position_transform="legacy")
+    if x != 1:
+        print("Nombre d'essaie : {}\n".format(x))
 
 
 

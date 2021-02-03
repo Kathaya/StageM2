@@ -37,11 +37,6 @@ if __name__ == "__main__":
 
     #Saving current wd
     wdpath = sys.argv[0].replace("imbalance2.py", "")
-    print(wdpath)
-    print(wdpath)
-    print(wdpath)
-    print(wdpath)
-    print(wdpath)
     os.environ['curr'] = wdpath
 
     # conversion en Newick pour index Imbalance
@@ -49,21 +44,21 @@ if __name__ == "__main__":
     os.environ['path'] = dirName
     os.environ['par'] = str(par)
 
-    os.system("bash -c 'rm launch_conv.txt'")
+    #os.system("bash -c 'rm launch_conv.txt'")
     for i in range(1,nb_sim+1):
         os.environ['i']=str(i)
         os.system("echo python ${curr}newick_conv.py $i $path msprime >> launch_conv.txt")
 
     os.system("bash -c 'parallel -a launch_conv.txt -j $par'")
-    os.system("bash -c 'parallel -a    launchms.txt -j $par'")
+    #os.system("bash -c 'parallel -a launchms.txt -j $par'")
 
 
     # conversion en format adapté au programme de JT pour l'index Imbalance
 
-    os.system ("bash -c 'rm launchms.txt'")
-    os.system ("bash -c 'rm launchts.txt'")
-    os.system ("bash -c 'rm launchre.txt'")
-    os.system ("bash -c 'rm launchms2.txt'")
+    #os.system ("bash -c 'rm launchms.txt'")
+    #os.system ("bash -c 'rm launchts.txt'")
+    #os.system ("bash -c 'rm launchre.txt'")
+    #os.system ("bash -c 'rm launchms2.txt'")
     for i in range(1,nb_sim+1):
         msNewick = str(dirName) + "/msprime" + str(i) + ".newick"
         tsNewick = str(dirName) + "/ts" + str(i) + ".newick"
@@ -90,10 +85,10 @@ if __name__ == "__main__":
                 
     # calcul index Imbalance
 
-    os.system ("bash -c 'rm launch2ms.txt'")
-    os.system ("bash -c 'rm launch2ts.txt'")
-    os.system ("bash -c 'rm launch2re.txt'")
-    os.system ("bash -c 'rm launch2ms2.txt'")
+    #os.system ("bash -c 'rm launch2ms.txt'")
+    #os.system ("bash -c 'rm launch2ts.txt'")
+    #os.system ("bash -c 'rm launch2re.txt'")
+    #os.system ("bash -c 'rm launch2ms2.txt'")
 
     for i in range(1,nb_sim+1):
         msNewick = str(dirName) + "/msprime" + str(i) + ".newick"
