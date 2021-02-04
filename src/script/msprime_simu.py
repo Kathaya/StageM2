@@ -35,6 +35,10 @@ def verification(tree_sequence):
         if index == 0 or index == L:
             flag=1
             break
+        elif (index in valeur) and index == L-1:
+            print("Doublons de fin")
+            flag=1
+            break
         else:
             valeur.append(index)
     if flag == 0 and len(valeur)>=10:
@@ -83,6 +87,7 @@ if __name__ == "__main__":
     tree_sequence.dump(tree_path+".trees")
     with open(vcf_path+".vcf", "w") as vcf_file: 
             tree_sequence.write_vcf(vcf_file, ploidy=2, position_transform="legacy")
+
     if x != 1:
         print("Nombre d'essaie : {}\n".format(x))
 
